@@ -12,9 +12,9 @@ Sınıf arkadaşlarımla geliştirdiğimiz 1.sınıf oop dersinin projesi ToDo p
 
 ## 🛠️ Teknolojiler
 
-- **Backend**: Spring Boot 3.4.4, Java 17, Maven
-- **Frontend**: Thymeleaf, Bootstrap 5, Vanilla JS
-- **Database**: MySQL 8.0
+- **Backend**: Java, Spring Boot
+- **Frontend**: HTML, CSS, JS
+- **Database**: MySQL 
 - **Security**: Spring Security, BCrypt
 
 ## 📁 Proje Yapısı
