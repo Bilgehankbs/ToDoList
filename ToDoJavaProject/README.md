@@ -50,12 +50,12 @@ src/main/
 
 ## 📞 İletişim
 
-bilgehanakbas0@gmail.com
-https://www.linkedin.com/in/bilgehan-akbas/
+- bilgehanakbas0@gmail.com
+- https://www.linkedin.com/in/bilgehan-akbas/
 
 ### Takım Arkadaşlarım
 
-**Mustafa Karadeniz** - official.mustafakaradeniz@gmail.com
-**Yavuzhan Kılıç** - yavuzhankilic@icloud.com
-**Efe Arda Dakes** - efe.dakes@gmail.com  
-**Akif Korkmaz** - akifkorkmaz@hotmail.com
+- **Mustafa Karadeniz** - official.mustafakaradeniz@gmail.com
+- **Yavuzhan Kılıç** - yavuzhankilic@icloud.com
+- **Efe Arda Dakes** - efe.dakes@gmail.com  
+- **Akif Korkmaz** - akifkorkmaz@hotmail.com
