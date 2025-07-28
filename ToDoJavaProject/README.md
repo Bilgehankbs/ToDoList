@@ -1,5 +1,5 @@
 # ToDo Java Project
-Sınıf arkadaşlarımla geliştirdiğimiz 1.sınıf oop dersinin projesi ToDo project. Amaç Java dilini etkin kullanarak bir proje geliştirmekti. Kullanıcılar görevlerini oluşturabilir, notlarını kaydedebilir ve sohbetler yönetebilir. Yani basitçe bir not alma ve görev ekleme uygulamasıdır. Pictures klasöründe son hali yer almaktadır.
+Sınıf arkadaşlarımla geliştirdiğimiz 1.sınıf oop dersinin projesi ToDo project. Amaç Java dilini etkin kullanarak bir proje geliştirmekti. Kullanıcılar görevlerini oluşturabilir, notlarını kaydedebilir ve sohbetler yönetebilir. Yani basitçe bir not alma ve görev ekleme uygulamasıdır. Pictures klasöründe görsel olarak son hali yer almaktadır.
 
 ## 🚀 Özellikler
 
