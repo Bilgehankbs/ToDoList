@@ -58,4 +58,4 @@ src/main/
 - **Mustafa Karadeniz** - official.mustafakaradeniz@gmail.com
 - **Yavuzhan Kılıç** - yavuzhankilic@icloud.com
 - **Efe Arda Dakes** - efe.dakes@gmail.com  
-- **Akif Korkmaz** - akifkorkmaz@hotmail.com
+- **Akif Korkmaz** - akifkorkmaz11@hotmail.com
