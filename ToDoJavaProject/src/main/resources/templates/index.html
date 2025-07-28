@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do List & Notes</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="app-container">
+    <!-- Sol Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <h2>Not Sohbetleri</h2>
+            <button
+                    type="button"
+                    class="btn btn-outline-primary btn-sm btn-add-chat"
+                    data-bs-toggle="modal"
+                    data-bs-target="#newChatModal"
+            >
+                <i class="bi bi-plus-lg"></i>
+            </button>
+
+        </div>
+
+
+        <!-- Sohbet Listesi -->
+        <div class="chat-list">
+            <div th:each="chat : ${chats}" class="chat-item" th:onclick="'selectChat(' + ${chat.id} + ')'">
+                <div class="chat-icon">
+                    <i class="bi" th:classappend="${chat.type == T(com.ornek.todolist.model.ChatType).GROUP ? 'bi-people' : 'bi-person'}"></i>
+                </div>
+                <div class="chat-info">
+                    <h6 th:text="${chat.name}">Sohbet Adı</h6>
+                    <small th:text="${chat.type == T(com.ornek.todolist.model.ChatType).GROUP ? 'Grup' : 'Bireysel'}">Sohbet Tipi</small>
+                </div>
+                <div class="chat-actions">
+                    <a th:href="@{/chat/edit/{chatId}(chatId=${chat.id})}" 
+                       class="btn btn-sm btn-outline-primary" 
+                       th:onclick="'event.stopPropagation();'"
+                       title="Sohbeti Düzenle">
+                        <i class="bi bi-pencil"></i>
+                    </a>
+                    <button class="btn btn-sm btn-outline-danger delete-chat-btn" 
+                            th:onclick="'deleteChat(' + ${chat.id} + '); event.stopPropagation();'"
+                            title="Sohbeti Sil">
+                        <i class="bi bi-trash"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+
+
+        <!-- Profil Bölümü -->
+        <div class="profile-section">
+            <div class="profile-image">
+                <i class="bi bi-person-circle"></i>
+            </div>
+            <div class="profile-info">
+                <h6 th:text="${myName}">Kullanıcı Adı</h6>
+                <small class="text-muted" th:text="${user != null ? user.status.displayName : 'Çevrimiçi'}">Çevrimiçi</small>
+            </div>
+            <div class="profile-actions">
+                <a href="/profile" class="btn btn-outline-primary btn-sm" title="Profili Görüntüle">
+                    <i class="bi bi-eye"></i>
+                </a>
+                <form th:action="@{/logout}" method="get" class="m-0 d-inline">
+                    <button type="submit" class="btn btn-outline-danger btn-sm" title="Çıkış Yap">
+                        <i class="bi bi-box-arrow-right"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Ana İçerik -->
+    <main class="main-content">
+        <div class="content-header">
+            <h4 th:text="${currentChat != null ? currentChat.name : 'Hoş Geldiniz!'}">Hoş Geldiniz!</h4>
+            <p th:if="${currentChat == null}">Yeni bir not veya görev eklemek için bir sohbet seçin.</p>
+        </div>
+
+        <!-- Hata ve Başarı Mesajları -->
+        <div class="alert-container">
+            <div th:if="${error == 'TaskAddError'}" class="alert alert-danger fade show" role="alert">
+                <span>Görev eklenirken bir hata oluştu. Lütfen tekrar deneyin.</span>
+            </div>
+            <div th:if="${success == 'TaskAdded'}" class="alert alert-success fade show" role="alert">
+                <span>Görev başarıyla eklendi!</span>
+            </div>
+            <div th:if="${error == 'TaskUpdateError'}" class="alert alert-danger fade show" role="alert">
+                <span>Görev güncellenirken bir hata oluştu. Lütfen tekrar deneyin.</span>
+            </div>
+            <div th:if="${success == 'TaskUpdated'}" class="alert alert-success fade show" role="alert">
+                <span>Görev başarıyla güncellendi!</span>
+            </div>
+            <div th:if="${success == 'ChatCreated'}" class="alert alert-success fade show" role="alert">
+                <span>Yeni sohbet başarıyla oluşturuldu!</span>
+            </div>
+            <div th:if="${success == 'NoteSaved'}" class="alert alert-success fade show" role="alert">
+                <span>Not başarıyla kaydedildi!</span>
+            </div>
+            <div th:if="${success == 'TaskDeleted'}" class="alert alert-success fade show" role="alert">
+                <span>Görev başarıyla silindi!</span>
+            </div>
+            <div th:if="${success == 'ChatDeleted'}" class="alert alert-success fade show" role="alert">
+                <span>Sohbet başarıyla silindi!</span>
+            </div>
+            <div th:if="${success == 'ChatUpdated'}" class="alert alert-success fade show" role="alert">
+                <span>Sohbet başarıyla güncellendi!</span>
+            </div>
+            <div th:if="${error == 'ChatUpdateError'}" class="alert alert-danger fade show" role="alert">
+                <span>Sohbet güncellenirken bir hata oluştu. Lütfen tekrar deneyin.</span>
+            </div>
+            <div th:if="${error == 'ChatCreateError'}" class="alert alert-danger fade show" role="alert">
+                <span>Sohbet oluşturulurken bir hata oluştu. Lütfen tekrar deneyin.</span>
+            </div>
+            <div th:if="${error == 'NoteSaveError'}" class="alert alert-danger fade show" role="alert">
+                <span>Not kaydedilirken bir hata oluştu. Lütfen tekrar deneyin.</span>
+            </div>
+        </div>
+
+        <!-- Seçili Sohbet İçeriği -->
+        <div th:if="${currentChat != null}">
+            <!-- Not  Alanı -->
+            <div class="note-section">
+                <div class="note-card">
+                    <h5> Not </h5>
+
+                    <form th:action="@{/chat/{chatId}/paragraph(chatId=${chat.id})}" method="post">
+                        <textarea th:text="${chat.paragraph}" name="paragraph" rows="4" placeholder="Notunuzu buraya yazın...">
+
+                         </textarea>
+                        <button type="submit" class="btn btn-primary mt-2">Kaydet</button>
+                    </form>
+
+
+                </div>
+            </div>
+
+            <!-- Task ve To-Do List Kartları -->
+            <div class="cards-container">
+                <!-- Task Kartı -->
+                <div class="card task-card">
+                    <div class="card-header">
+                        <h5>Görevler</h5>
+                        <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#newTaskModal">
+                            <i class="bi bi-plus-lg"></i> Yeni Görev
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <div class="task-list">
+                            <div th:each="task : ${tasks}" class="task-item">
+                                <div class="task-header">
+                                    <h6 th:text="${task.title}">Görev Başlığı</h6>
+                                    <div class="task-actions">
+                                        <a th:href="@{/task/edit/{taskId}(taskId=${task.id}, chatId=${currentChat?.id})}" 
+                                           class="btn btn-sm btn-outline-primary" title="Düzenle">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                        <button class="btn btn-sm btn-outline-danger" th:onclick="'deleteTask(' + ${task.id} + ', ' + ${currentChat?.id} + ')'" title="Sil">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <p th:text="${task.content}">Görev İçeriği</p>
+                            </div>
+                            <div th:if="${#lists.isEmpty(tasks)}" class="text-muted text-center py-3">
+                                <i class="bi bi-inbox"></i>
+                                <p>Henüz görev eklenmemiş</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<!-- Yeni Sohbet Modalı -->
+<div class="modal fade" id="newChatModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Yeni Sohbet Oluştur</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form action="/chats" method="post">
+                    <div class="mb-3">
+                        <label class="form-label">Sohbet Adı</label>
+                        <input type="text" class="form-control" name="name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Sohbet Tipi</label>
+                        <select class="form-select" name="type" required>
+                            <option value="INDIVIDUAL">Bireysel</option>
+                            <option value="GROUP">Grup</option>
+                        </select>
+                    </div>
+                    <div class="text-end">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
+                        <button type="submit" class="btn btn-primary">Oluştur</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Yeni Görev Modalı -->
+<div class="modal fade" id="newTaskModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Yeni Görev Ekle</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form action="/task/add" method="post">
+                    <input type="hidden" name="chatId" th:value="${currentChat?.id}">
+                    <div class="mb-3">
+                        <label class="form-label">Başlık</label>
+                        <input type="text" class="form-control" name="title" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">İçerik</label>
+                        <textarea class="form-control" name="content" rows="3" required></textarea>
+                    </div>
+                    <div class="text-end">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
+                        <button type="submit" class="btn btn-primary">Ekle</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="/js/common.js"></script>
+<script>
+    function selectChat(chatId) {
+        window.location.href = '/chat/' + chatId;
+    }
+
+    function deleteTask(taskId, chatId) {
+        if (confirm('Bu görevi silmek istediğinizden emin misiniz?')) {
+            let url = '/task/delete/' + taskId;
+            if (chatId) {
+                url += '?chatId=' + chatId;
+            }
+            window.location.href = url;
+        }
+    }
+
+    function deleteChat(chatId) {
+        if (confirm('Bu sohbeti silmek istediğinizden emin misiniz? Bu işlem geri alınamaz!')) {
+            window.location.href = '/chat/delete/' + chatId;
+        }
+    }
+</script>
+</body>
+</html>

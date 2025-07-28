@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profil Düzenle</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body style="overflow: hidden;">
+            <div class="container mt-5" style="overflow: hidden;">
+                <div class="row justify-content-center">
+                    <div class="col-md-8">
+                        <div class="card profile-card" style="overflow: hidden;">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h4><i class="bi bi-pencil-square"></i> Profil Düzenle</h4>
+                                <a th:href="@{/profile}" class="btn btn-outline-secondary btn-sm">
+                                    <i class="bi bi-arrow-left"></i> Geri Dön
+                                </a>
+                            </div>
+                <div class="card-body">
+                    
+                    <!-- Hata Mesajları -->
+                    <div th:if="${error == 'PasswordMismatch'}" class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <i class="bi bi-exclamation-triangle"></i>
+                        <span>Şifreler eşleşmiyor! Lütfen aynı şifreyi her iki alana da girin.</span>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                    
+                    <div th:if="${error == 'PasswordTooShort'}" class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <i class="bi bi-exclamation-triangle"></i>
+                        <span>Şifre en az 4 karakter olmalıdır! Lütfen daha uzun bir şifre seçin.</span>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                    
+                    <div th:if="${error == 'PasswordEmpty'}" class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <i class="bi bi-exclamation-triangle"></i>
+                        <span>Yeni şifre alanı boş olamaz! Lütfen şifre alanını doldurun.</span>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                    
+                    <div th:if="${error == 'NameEmpty'}" class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <i class="bi bi-exclamation-triangle"></i>
+                        <span>İsim alanı boş olamaz! Lütfen isminizi girin.</span>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                    
+                    <div th:if="${error == 'EmailChangeNotAllowed'}" class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <i class="bi bi-exclamation-triangle"></i>
+                        <span>E-posta adresi güvenlik nedeniyle değiştirilemez!</span>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                    
+                    <div th:if="${error == 'GeneralError'}" class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <i class="bi bi-exclamation-triangle"></i>
+                        <span>Profil güncellenirken bir hata oluştu. Lütfen tekrar deneyin.</span>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                    
+                    <!-- Başarı Mesajları -->
+                    <div th:if="${success == 'ProfileUpdated'}" class="alert alert-success alert-dismissible fade show" role="alert">
+                        <i class="bi bi-check-circle"></i>
+                        <span>Profil başarıyla güncellendi!</span>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                    
+                    <form th:action="@{/profile/edit}" method="post">
+                        <div class="mb-3">
+                            <label for="name" class="form-label">İsim</label>
+                            <input type="text" class="form-control" id="name" name="name" 
+                                   th:value="${user.name}" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="email" class="form-label">E-posta</label>
+                            <input type="email" class="form-control" id="email" name="email" 
+                                   th:value="${user.email}" readonly>
+                            <div class="form-text text-muted">
+                                <i class="bi bi-info-circle"></i> E-posta adresi güvenlik nedeniyle değiştirilemez.
+                            </div>
+                        </div>
+                        
+                        <hr class="my-4">
+                        <h6 class="text-muted">Şifre Değiştir (İsteğe bağlı)</h6>
+                        
+                        <div class="mb-3">
+                            <label for="newPassword" class="form-label">Yeni Şifre</label>
+                            <input type="password" class="form-control" id="newPassword" name="newPassword" 
+                                   placeholder="En az 4 karakter">
+                            <div class="form-text">Şifrenizi değiştirmek istemiyorsanız boş bırakın.</div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="confirmPassword" class="form-label">Yeni Şifre Tekrar</label>
+                            <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" 
+                                   placeholder="Yeni şifrenizi tekrar girin">
+                        </div>
+                        
+                        <div class="d-flex justify-content-between">
+                            <a th:href="@{/profile}" class="btn btn-secondary">
+                                İptal
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-check-lg"></i> Güncelle
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="/js/common.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        
+        // Form validation
+        const form = document.querySelector('form');
+        const newPasswordInput = document.getElementById('newPassword');
+        const confirmPasswordInput = document.getElementById('confirmPassword');
+        const nameInput = document.getElementById('name');
+        
+        form.addEventListener('submit', function(e) {
+            let hasError = false;
+            let errorMessage = '';
+            
+            // İsim kontrolü
+            if (!nameInput.value.trim()) {
+                errorMessage = 'İsim alanı boş olamaz!';
+                hasError = true;
+            }
+            // Şifre kontrolü
+            else if (newPasswordInput.value.trim() || confirmPasswordInput.value.trim()) {
+                if (!newPasswordInput.value.trim()) {
+                    errorMessage = 'Yeni şifre alanı boş olamaz!';
+                    hasError = true;
+                } else if (newPasswordInput.value.trim().length < 4) {
+                    errorMessage = 'Şifre en az 4 karakter olmalıdır!';
+                    hasError = true;
+                } else if (newPasswordInput.value !== confirmPasswordInput.value) {
+                    errorMessage = 'Şifreler eşleşmiyor!';
+                    hasError = true;
+                }
+            }
+            
+            if (hasError) {
+                e.preventDefault();
+                showErrorAlert(errorMessage);
+            }
+        });
+        
+        // Hata mesajı göster
+        function showErrorAlert(message) {
+            // Mevcut alert'leri temizle
+            const existingAlerts = document.querySelectorAll('.alert');
+            existingAlerts.forEach(alert => alert.remove());
+            
+            // Yeni alert oluştur
+            const alertDiv = document.createElement('div');
+            alertDiv.className = 'alert alert-danger alert-dismissible fade show';
+            alertDiv.innerHTML = `
+                <i class="bi bi-exclamation-triangle"></i> ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            `;
+            
+            // Form'dan önce ekle
+            const form = document.querySelector('form');
+            form.parentNode.insertBefore(alertDiv, form);
+            
+            // 3 saniye sonra kapat
+            setTimeout(function() {
+                alertDiv.classList.add('fade-out');
+                setTimeout(function() {
+                    alertDiv.remove();
+                }, 300);
+            }, 3000);
+        }
+    });
+</script>
+</body>
+</html> 
